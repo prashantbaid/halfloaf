@@ -7,8 +7,9 @@ provider:
   runtime: nodejs14.x
   region: ap-south-1
   stackName: halfloaves
+  timeout: 60
 functions:
   halfloaves:
     handler: halfloaves.handler
-    events:
-      - httpApi: 'GET /find-half-loaves'
+plugins:
+  - serverless-esbuild

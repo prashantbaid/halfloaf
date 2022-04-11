@@ -36,40 +36,37 @@ const processResults = (data) => {
   const totalResults = data.eventMeta.result_count;
 
   data.widgets.map((widget) => {
-    const items = widget.items;
+    if (widget.type !== 'SEPARATOR' && widget.items) {
+      const { items, checkoutData, eventMeta, widgetData } = widget;
+      const { lat, lng, displayAddress, title, distanceText } = checkoutData;
+      const dzid = eventMeta.dzid;
+      const storeDistance = saniteiseDistance(distanceText);
 
-    if (widget.type !== 'SEPARATOR' && items) {
+      const storeData = {
+        storeName: title,
+        storeAddress: displayAddress,
+        storeDistance,
+        halfloaves: [],
+        lng,
+        lat
+      };
       items.map(item => {
-        if (item.category === 'Breakfast & Dairy' && item.subCategory === 'Bread & Buns' && removeArtisinalBreads(item.title)) {
-          const lat = widget.checkoutData.lat;
-          const lng = widget.checkoutData.lng;
-          const dzid = widget.eventMeta.dzid;
-          const storeDetails = widget.widgetData.actionButton.action;
-          const storeAddress = storeDetails.address;
-          const storeName = widget.title;
+        if (storeDistance < 20 && item.category === 'Breakfast & Dairy' && item.subCategory === 'Bread & Buns' && removeArtisinalBreads(item.title)) {
+
 
           if (item.customizationData) {
             const variantTypes = item.customizationData.variantTypes;
             if (variantTypes) {
               variantTypes.map(variantType => variantType.variants.map(variant => {
-                if (variant.unitWeight < 300) {
+                const { unitWeight, itemQuantityOrWeight, priceText, variantSlug } = variant;
+                if (unitWeight < 300 && validateWeights(unitWeight, itemQuantityOrWeight)) {
 
-                  const imageUrl = variant.imageUrls && variant.imageUrls[0];
-                  finalData.push({
+                  storeData.halfloaves.push({
                     title: item.title,
-                    variant: variant.unitWeight,
-                    url: `https://www.dunzo.com/product/${variant.variantSlug}?dzid=${dzid}`,
-                    lat,
-                    lng,
-                    storeAddress,
-                    storeName,
-                    imageUrl
+                    weight: itemQuantityOrWeight,
+                    price: priceText,
+                    url: `https://www.dunzo.com/product/${variantSlug}?dzid=${dzid}`
                   })
-                  // console.log('title ', item.title);
-                  // console.log('variant: ', variant.unitWeight);
-                  // console.log('variant: ', variant.variantSlug);
-                  // console.log(`https://www.dunzo.com/product/${variant.variantSlug}?dzid=${dzid}`)
-                  // console.log('lat: ', lat, 'lng: ', lng);
                 }
               })
               )
@@ -77,10 +74,33 @@ const processResults = (data) => {
           }
         }
       })
+      if (storeData.halfloaves.length > 0) {
+        finalData.push(storeData);
+      }
     }
   });
 
   return { finalData, totalResults };
+}
+
+const validateWeights = (unitWeight, itemQuantityOrWeight) => {
+  if (unitWeight > 0 && itemQuantityOrWeight.includes(' Gms')) {
+    const weight = itemQuantityOrWeight.substring(0, itemQuantityOrWeight.length - 3);
+    if (Number(weight) < 300) {
+      return true;
+    }
+
+    return false;
+  }
+}
+
+const saniteiseDistance = (distanceText) => {
+  console.log('distance is ', distanceText);
+
+  if (distanceText.includes(' km')) {
+    return distanceText.substring(0, distanceText.length - 3);
+  }
+  return distanceText;
 }
 
 const getBreads = async (options, breadsArr) => {
@@ -119,7 +139,9 @@ const getBreads = async (options, breadsArr) => {
 
   const response = await got(requestOptions);
 
-  const processedResults = processResults(JSON.parse(response.body));
+  const dunzoData = JSON.parse(response.body);
+
+  const processedResults = processResults(dunzoData);
 
   const { finalData, totalResults } = processedResults;
 
@@ -127,7 +149,7 @@ const getBreads = async (options, breadsArr) => {
 
   console.log('current breada arr ', breadsArr.length);
 
-  if (Number(totalResults) === 0 || pg > 5) {
+  if (!dunzoData.next || pg > 10) {
     return breadsArr;
   } else {
     await getBreads({ ...options, pg: pg + 1 }, breadsArr);
@@ -135,6 +157,6 @@ const getBreads = async (options, breadsArr) => {
 }
 
 const removeArtisinalBreads = (title) => {
-  const regex = new RegExp(/(kulcha|fruit|pav|bun|fuit|sweet|flattened|flat|garlic|toast|toasted|round|crumbs|cheese|pita|pizza)+/g);
+  const regex = new RegExp(/(kulcha|fruit|pav|bun|fuit|sweet|flattened|flat|garlic|toast|toasted|round|crumbs|cheese|pita|pizza|cream|creamy|roll|parmesan|footlong|sub|crumb|stick|focaccia)+/g);
   return !regex.test(title.toLowerCase());
 }
