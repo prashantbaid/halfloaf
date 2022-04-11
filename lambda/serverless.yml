@@ -5,7 +5,7 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs14.x
-  region: eu-west-1
+  region: ap-south-1
   stackName: halfloaves
 functions:
   halfloaves:
@@ -13,5 +13,5 @@ functions:
     events:
       - http:
           path: find-half-loaves
-          method: post
+          method: get
           cors: true
