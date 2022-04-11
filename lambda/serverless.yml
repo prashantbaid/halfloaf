@@ -14,4 +14,3 @@ functions:
       - http:
           path: find-half-loaves
           method: get
-          cors: true

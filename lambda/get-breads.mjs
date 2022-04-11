@@ -1,24 +1,3 @@
-import got from 'got';
-import cheerio from 'cheerio';
-
-export const handler = async function (event, context) {
-  const lng = event.queryStringParameters.lng;
-  const lat = event.queryStringParameters.lat;
-
-  const { csrfToken, cookie } = await getCookieAndCsrfToken();
-
-  const breads = [];
-  await getBreads({ lat, lng, csrfToken, cookie }, breads);
-
-
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*' // Required for CORS support to work
-    },
-    body: JSON.stringify(breads)
-  }
-}
 
 async function getCookieAndCsrfToken() {
   const response = await got(`https://www.dunzo.com/search`);
@@ -83,7 +62,7 @@ const processResults = (data) => {
   return { finalData, totalResults };
 }
 
-const getBreads = async (options, breadsArr) => {
+export const getBreads = async (options, breadsArr) => {
 
   const { lat, lng, csrfToken, cookie, pg = 1 } = options;
 
