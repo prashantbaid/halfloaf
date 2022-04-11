@@ -1,0 +1,250 @@
+:root {
+  --basecolor: #FBF6EA;
+}
+
+
+@font-face {
+  font-family: "os-ebi";
+  src: url(/fonts/os-ebi.ttf);
+}
+
+@font-face {
+  font-family: "os-sbi";
+  src: url(/fonts/os-sbi.ttf);
+}
+
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: os-ebi, -apple-system, system-ui, sans-serif;
+  background-color: var(--basecolor);
+}
+
+/* Small devices (Phones, 600pxand down) -- this would display the text at 5.0rem on phones */
+
+@media only screen and (max-width: 600px) {
+  .font-small {
+    font-size: 10px;
+  }
+
+  .font-medium {
+    font-size: 12px;
+  }
+
+  .font-large {
+    font-size: 15px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  .map-height {
+    height: 400px;
+  }
+}
+
+
+/* Large devices (laptops/desktops, 992px and up) -- This would display the text at 10.0rem on laptops and larger screens */
+
+@media only screen and (min-width: 992px) {
+  .font-small {
+    font-size: 14px;
+  }
+
+  .font-medium {
+    font-size: 18px;
+  }
+
+  .font-large {
+    font-size: 20px;
+  }
+
+  body {
+    font-size: 20px;
+  }
+
+  .map-height {
+    height: 600px;
+  }
+}
+
+/* 
+.font-small {
+  font-size: calc(9px + 1vmin);
+}
+
+.font-medium {
+  font-size: calc(12px + 1vmin)
+}
+
+.font-large {
+  font-size: calc(15px + 1vmin)
+}
+
+.font-xl {
+  font-size: calc(18px + 1vmin)
+} */
+
+
+#marker {
+  background-image: url('/images/bread.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.search-results-header {
+  background-color: #000;
+  color: var(--basecolor);
+}
+
+hr {
+  border-top: 2px solid #000;
+}
+
+.row-flex {
+  min-width: 0px;
+  flex: 1;
+}
+
+.cta-button a {
+  border: 2px solid #000;
+  padding: 5px 10px;
+  font-family: os-ebi;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+.cta-button {
+  width: fit-content;
+}
+
+.cta-button a:hover {
+  color: var(--basecolor);
+  background-color: rgba(0, 0, 0, 0.8);
+  text-decoration: none;
+}
+
+#map {
+  position: relative;
+  bottom: 0;
+  border: 4px solid;
+  display: none;
+}
+
+.search-input {
+  border: 3px solid;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--basecolor);
+  font-size: 18px;
+}
+
+.logo-style {
+  height: 100px;
+  width: 100px;
+}
+
+.result-count {
+  font-size: 17px;
+  font-family: os-ebi;
+}
+
+.os-sbi {
+  font-family: os-sbi;
+}
+
+h3, h4, h5, h6 {
+  font-family: os-ebi;
+  margin-bottom: 0px;
+}
+
+.bread-name {
+  font-family: os-sbi;
+}
+
+.loading-container, .no-results-container, .results-container, .error-container {
+  display: none;
+}
+
+.box {
+  border: 3px solid;
+  padding: 20px;
+}
+
+.breadImage {
+  max-width: 32px;
+  max-height: 32px;
+}
+
+.lighter-text {
+  opacity: 0.7;
+}
+
+.pac-icon {
+  display: none;
+}
+
+.store-address {
+  font-family: os-sbi;
+  opacity: 0.8;
+  margin-top: -3px;
+}
+
+.spinner-grow {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  vertical-align: text-bottom;
+  background-color: currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  -webkit-animation: spinner-grow 2s linear infinite;
+  animation: spinner-grow 2s linear infinite;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-direction: normal;
+  animation-fill-mode: none;
+  animation-play-state: running;
+  animation-name: spinner-grow;
+}
+
+.pac-container:after {
+  background-image: none !important;
+  height: 0px;
+}
+
+.pac-container {
+  font-family: inherit;
+  box-shadow: none;
+  border-right: 3px solid #000;
+  border-left: 3px solid #000;
+  background-color: var(--basecolor);
+}
+
+.pac-item:hover {
+  background-color: var(--basecolor);
+}
+
+.pac-item-query {
+  font-size: 18px;
+}
+
+.pac-item {
+  padding: 10px;
+  font-size: 14px;
+  border-bottom: 3px solid #000;
+}
+
+a, a:hover {
+  text-decoration: underline;
+  color: #000;
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Locator</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqI4n08BuaWsCHieJl1tdHM1aLMMoUFKs&libraries=places"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.1/nunjucks.min.js" integrity="sha512-IIuR+Zp8wvP0dxNcSsRPoL7SXzP1kGmosDtcU7f6cPObZ9F5Ze/icFSRH/SqigP468jGwDm2XOE0/gSGm/cTBw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/maplibre-gl@2.1.7/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@2.1.7/dist/maplibre-gl.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="/js/script.js"></script>
+    <link href="/css/styles.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="d-flex align-items-center flex-column mt-4">
+      <div class="col-12 col-lg-8 col-sm-10 text-center">
+        <div class="mt-4 text-center">
+          <div class="d-flex align-items-center justify-content-center">
+            <img src="/images/bread-logo.png" class="logo-style"/>
+            <div class="text-left ml-3">
+              <h4 class="text-uppercase">Half-loaf bread</h4>
+              <div class="lighter-text">SEARCH ENGINE</div>
+            </div>
+          </div>
+          <div class="os-sbi my-3">Helps find half-loaves of sliced bread near you..</div>
+          <div class="col-lg-6 col-sm-8 col-12 mx-auto">
+            <input id="searchTextField" class="px-2 search-input" type="text">
+            <p class="os-sbi lighter-text font-small text-left pt-2">
+              <sup>*</sup>Available in: Bengaluru, Chennai, Gurgaon, Hyderabad, Mumbai, New Delhi, and Pune
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6 col-sm-10 text-center">
+        <div id="map" class="mt-4 map-height"></div>
+        <div class="results-container"></div>
+      </div>
+      <div class="col-sm-6 col-lg-3 sol-12 mt-4">
+        <div class="loading-container">
+          <div class="search-results-header p-3 d-flex">
+            <div class="spinner-grow text-light" role="status"></div>
+            <h4 class="result-label ml-2">Please wait...</h4>
+          </div>
+          <div class="box os-sbi">Scouring this area for half-loaves of plain white or brown sliced bread. This may take up to 30 seconds.</div>
+        </div>
+      </div>
+      <div class="col-sm-8 col-lg-5 col-12 mt-4">
+        <div class="no-results-container">
+          <div class="search-results-header p-3">
+            <h4 class="result-label ml-2 os-sbi">Half-loaf bread not found :(</h4>
+          </div>
+          <div class="box os-sbi">Could not find any half-loaf bread in this area. Please enter another location or try again later.</div>
+        </div>
+        <div class="error-container">
+          <div class="search-results-header p-3">
+            <h4 class="result-label ml-2 os-sbi">Could not search for half-loaf bread</h4>
+          </div>
+          <div class="box os-sbi">
+            <p>Please make sure the location you've entered falls within the following cities: Bengaluru, Chennai, Gurgaon, Hyderabad, Mumbai, New Delhi, and Pune</p>
+            <p>If you're still this message, please try again later.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script id="resultsTemplate" type="text/nunjucks">
+      <div>
+        <div class="search-results-header p-3 text-left">
+          <h3 class="result-label">Search Results</h3>
+          <div class="os-sbi">Found
+            <span class="result-count">{{totalLoaves}}
+              half-loaves
+            </span>
+            of bread in
+            <span class="result-count">{{results.length}}
+              stores</span>
+          </div>
+        </div>
+        <div class="results box px-sm-3 px-2 justify-content-center">
+          <p class="os-sbi lighter-text font-small text-left mb-5">
+            <sup>*</sup>this website is not affiliated with Dunzo or any half-loaf bread company
+          </p>
+          {% for store in results %}
+            <div class="mb-5 pb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center pr-4 row-flex">
+                  <div><img src="/images/bread.png" alt="{{ store.storeName }}" class="breadImage"></div>
+                  <div class="text-left ml-2 pl-1 pr-3 text-truncate">
+                    <div class="font-large text-truncate">{{store.storeName}}</div>
+                    <div class="font-small os-sbi text-truncate">
+                      {{store.storeAddress}}
+                      ·
+                      {{store.storeDistance}}
+                      kms away
+                    </div>
+                  </div>
+                </div>
+                <div class="cta-button font-small">
+                  <a href="https://www.google.com/maps/search/?api=1&query={{ store.storeName }}+{{store.storeAddress}}&loc={{store.lat}},{{store.lng}}" target="_blank" class="d-none d-sm-block">View in Google Maps</a>
+                  <a href="https://www.google.com/maps/search/?api=1&query={{store.lat}},{{store.lng}}" target="_blank" class="d-sm-none">Google Maps</a>
+                </div>
+              </div>
+              <hr class="my-2 my-sm-3"/>
+              {% for item in store.halfloaves %}
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                  <div class="d-flex align-items-center pr-4 row-flex">
+                    <div class=""><img src="/images/default-bread.png" alt="{{ item.title }}" class="breadImage p-1"></div>
+                    <div class="text-left ml-2 os-sbi text-truncate">
+                      <div class="font-medium text-truncate">{{item.title}}</div>
+                      <div class="font-small">
+                        {{item.weight}}
+                        ·
+                        {{item.price}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cta-button font-small">
+                    <a href="{{item.url}}" target="_blank">Buy from Dunzo</a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </script>
+  </body>
+</html>
