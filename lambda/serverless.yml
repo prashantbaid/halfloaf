@@ -12,6 +12,6 @@ functions:
     handler: halfloaves.handler
     events:
       - http:
-          path: find
+          path: find-half-loaves
           method: post
           cors: true
