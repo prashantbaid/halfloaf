@@ -7,7 +7,7 @@ const getData = (lat, lng) => {
   hideResultsHtml();
   $('.loading-container').show();
 
-  fetch(`/.netlify/functions/find-half-loaves?lat=${lat}&lng=${lng}`, requestOptions)
+  fetch(`https://6pa3a8gyl5.execute-api.ap-south-1.amazonaws.com/default/findhalfloaves-prod-halfloaves?lat=${lat}&lng=${lng}`, requestOptions)
     .then(response => response.json())
     .then(result => drawMap(result))
     .catch(error => showErrorHtml(error));
