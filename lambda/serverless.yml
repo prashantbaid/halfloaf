@@ -11,6 +11,4 @@ functions:
   halfloaves:
     handler: halfloaves.handler
     events:
-      - http:
-          path: find-half-loaves
-          method: get
+      - httpApi: 'GET /find-half-loaves'
