@@ -69,6 +69,11 @@ function initialize() {
     const place = autocomplete.getPlace();
     getData(place.geometry.location.lat(), place.geometry.location.lng());
   });
+
+
+  $('#searchTextField').focus(function () {
+    $(this).val('');
+  });
 }
 
 const showResults = (results) => {
@@ -103,6 +108,7 @@ const showNoResultsHtml = () => {
   $('.loading-container').hide();
   $('.no-results-container').show();
 }
+
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
