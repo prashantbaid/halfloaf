@@ -7,7 +7,7 @@ const getData = (lat, lng) => {
   hideResultsHtml();
   $('.loading-container').show();
 
-  fetch(`http://localhost:3000/dev/findhalfloaves?lat=${lat}&lng=${lng}`, requestOptions)
+  fetch(`https://brc5og74x0.execute-api.ap-south-1.amazonaws.com/prod/findhalfloaves/dev/findhalfloaves?lat=${lat}&lng=${lng}`, requestOptions)
     .then(response => response.json())
     .then(result => drawMap(result))
     .catch(error => showNoResultsHtml(error));
