@@ -1,6 +1,8 @@
 import got from 'got';
 import cheerio from 'cheerio';
 
+const ARTISINAL_BREADS_REGEX = /(kulcha|fruit|pav|bun|fuit|sweet|flattened|flat|garlic|toast|toasted|round|crumbs|cheese|pita|pizza|cream|creamy|roll|parmesan|footlong|sub|crumb|stick|focaccia)+/g
+
 export const handler = async function (event, context) {
   const lng = event.queryStringParameters.lng;
   const lat = event.queryStringParameters.lat;
@@ -9,7 +11,6 @@ export const handler = async function (event, context) {
 
   const breads = [];
   await getBreads({ lat, lng, csrfToken, cookie }, breads);
-
 
   return {
     statusCode: 200,
@@ -32,8 +33,7 @@ async function getCookieAndCsrfToken() {
 
 
 const processResults = (data) => {
-  const finalData = [];
-  const totalResults = data.eventMeta.result_count;
+  const halfloafResults = [];
 
   data.widgets.map((widget) => {
     if (widget.type !== 'SEPARATOR' && widget.items) {
@@ -50,37 +50,37 @@ const processResults = (data) => {
         lng,
         lat
       };
+
       items.map(item => {
-        if (storeDistance < 20 && item.category === 'Breakfast & Dairy' && item.subCategory === 'Bread & Buns' && removeArtisinalBreads(item.title)) {
+        if (item.customizationData && item.category === 'Breakfast & Dairy' && item.subCategory === 'Bread & Buns' && isNonArtisinalBread(item.title) && storeDistance < 20) {
+          const variantTypes = item.customizationData.variantTypes;
 
+          if (variantTypes) {
+            variantTypes.map(variantType => variantType.variants.map(variant => {
+              const { unitWeight, itemQuantityOrWeight, priceText, variantSlug } = variant;
 
-          if (item.customizationData) {
-            const variantTypes = item.customizationData.variantTypes;
-            if (variantTypes) {
-              variantTypes.map(variantType => variantType.variants.map(variant => {
-                const { unitWeight, itemQuantityOrWeight, priceText, variantSlug } = variant;
-                if (unitWeight < 300 && validateWeights(unitWeight, itemQuantityOrWeight)) {
+              if (unitWeight < 300 && validateWeights(unitWeight, itemQuantityOrWeight)) {
+                storeData.halfloaves.push({
+                  title: item.title,
+                  weight: itemQuantityOrWeight,
+                  price: priceText,
+                  url: `https://www.dunzo.com/product/${variantSlug}?dzid=${dzid}`
+                })
+              }
 
-                  storeData.halfloaves.push({
-                    title: item.title,
-                    weight: itemQuantityOrWeight,
-                    price: priceText,
-                    url: `https://www.dunzo.com/product/${variantSlug}?dzid=${dzid}`
-                  })
-                }
-              })
-              )
-            }
+            }))
           }
+
         }
       })
+
       if (storeData.halfloaves.length > 0) {
-        finalData.push(storeData);
+        halfloafResults.push(storeData);
       }
     }
   });
 
-  return { finalData, totalResults };
+  return { halfloafResults };
 }
 
 const validateWeights = (unitWeight, itemQuantityOrWeight) => {
@@ -95,8 +95,6 @@ const validateWeights = (unitWeight, itemQuantityOrWeight) => {
 }
 
 const saniteiseDistance = (distanceText) => {
-  console.log('distance is ', distanceText);
-
   if (distanceText.includes(' km')) {
     return distanceText.substring(0, distanceText.length - 3);
   }
@@ -135,19 +133,13 @@ const getBreads = async (options, breadsArr) => {
 
   };
 
-  console.log('pg ', pg, ' calling...');
-
   const response = await got(requestOptions);
 
   const dunzoData = JSON.parse(response.body);
-
   const processedResults = processResults(dunzoData);
+  const { halfloafResults } = processedResults;
 
-  const { finalData, totalResults } = processedResults;
-
-  breadsArr.push(...finalData);
-
-  console.log('current breada arr ', breadsArr.length);
+  breadsArr.push(...halfloafResults);
 
   if (!dunzoData.next || pg > 10) {
     return breadsArr;
@@ -156,7 +148,7 @@ const getBreads = async (options, breadsArr) => {
   }
 }
 
-const removeArtisinalBreads = (title) => {
-  const regex = new RegExp(/(kulcha|fruit|pav|bun|fuit|sweet|flattened|flat|garlic|toast|toasted|round|crumbs|cheese|pita|pizza|cream|creamy|roll|parmesan|footlong|sub|crumb|stick|focaccia)+/g);
+const isNonArtisinalBread = (title) => {
+  const regex = new RegExp(ARTISINAL_BREADS_REGEX);
   return !regex.test(title.toLowerCase());
 }

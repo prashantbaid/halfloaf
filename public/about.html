@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Half loaf Search Engine</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqI4n08BuaWsCHieJl1tdHM1aLMMoUFKs&libraries=places"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.1/nunjucks.min.js" integrity="sha512-IIuR+Zp8wvP0dxNcSsRPoL7SXzP1kGmosDtcU7f6cPObZ9F5Ze/icFSRH/SqigP468jGwDm2XOE0/gSGm/cTBw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/maplibre-gl@2.1.7/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@2.1.7/dist/maplibre-gl.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="/js/script.js"></script>
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+  <body>
+    <div class="d-flex align-items-center flex-column mt-4">
+      <div class="col-12 col-lg-6 col-sm-10 text-center">
+        <div class="mt-sm-4 mt-3 text-center">
+          <a href="/" class="text-decoration-none">
+            <div class="d-flex align-items-center justify-content-center">
+              <img src="/images/bread-logo.png" class="logo-style"/>
+              <div class="text-left ml-3">
+                <h4 class="text-uppercase">HALF LOAF BREAD</h4>
+                <div class="lighter-text">SEARCH ENGINE</div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="box-header p-3 text-left mt-4">
+          <h3>
+            About
+          </h3>
+        </div>
+        <div class="box os-sbi p-sm-4 p-3 text-left mb-3">
+          <p>I love bread but I don't want to be eating 20 slices in 3 days. It shouldn't be so hard to find half-loaves of bread. They should be available more abundantly.</p>
+          <p>The search is restricted to basic white or brown sandwich bread only. It excludes all fancy, artisanal, and expensive half-loaves from search results.</p>
+          <hr class="my-4"/>
+          <p>The search is only available in select big cities in India because it uses Dunzo as the data source. No affiliation with Dunzo.</p>
+
+          <p>The API used to call Dunzo is open but undocumented. So if someone from Dunzo is reading this, don't be sending notices. This is just a stupid little thing.</p>
+          <p>This website does not sell anything, collects no personal data, and has no ads or trackers. Please just let this exist.</p>
+          <hr class="my-4"/>
+          <div class="d-sm-flex justify-content-around my-3 d-block">
+            <p>
+              <a href="https://peabee.xyz/projects/" target="_blank">View other silly projects</p>
+            </a>
+            <p>
+              <a href="https://twitter.com/prstb" target="_blank">Follow me on Twitter</p>
+            </a>
+            <p>
+              <a href="https://github.com/prashantbaid/halfloaf" target="_blank">View in Github</p>
+            </a>
+          </div>
+          <div class="d-flex justify-content-center">
+            <a class="bmc-btn font-medium px-4 py-2"" target="_blank" href="http://buymeacoffee.com/maxmess"><span class="bmc-btn-text">🍞 Buy me half a loaf</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

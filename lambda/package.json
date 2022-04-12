@@ -8,7 +8,8 @@
   },
   "devDependencies": {
     "esbuild": "^0.14.34",
-    "serverless-esbuild": "^1.26.2"
+    "serverless-esbuild": "^1.26.2",
+    "serverless-offline": "^8.5.0"
   },
   "keywords": [],
   "author": "",

@@ -11,5 +11,11 @@ provider:
 functions:
   halfloaves:
     handler: halfloaves.handler
+    events:
+      - http:
+          path: findhalfloaves
+          method: get
+          cors: true
 plugins:
   - serverless-esbuild
+  - serverless-offline

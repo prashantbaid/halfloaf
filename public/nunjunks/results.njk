@@ -1,0 +1,59 @@
+<div>
+  <div class="box-header p-3 text-left">
+    <h3>Search Results</h3>
+    <div class="os-sbi">Found
+      <span class="result-count">{{ totalLoaves }}
+        half loaf bread
+      </span>
+      options from
+      <span class="result-count">{{ results.length }}
+        stores</span>
+    </div>
+  </div>
+  <div class="results box px-sm-3 px-2 justify-content-center">
+    <p class="os-sbi lighter-text font-small text-left mb-4">
+      <sup>*</sup>not affiliated with Dunzo or any half loaf bread brand
+    </p>
+    {% for store in results %}
+      <div class="mb-5 pb-3 result-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center pr-4 row-flex">
+            <div><img src="/images/bread.png" alt="{{ store.storeName }}" class="breadImage"></div>
+            <div class="text-left ml-2 pl-1 pr-3 text-truncate">
+              <div class="font-large text-truncate">{{ store.storeName }}</div>
+              <div class="font-small os-sbi text-truncate">
+                {{ store.storeAddress }}
+                ·
+                {{ store.storeDistance }}
+                kms away
+              </div>
+            </div>
+          </div>
+          <div class="cta-button font-small">
+            <a href="https://www.google.com/maps/search/?api=1&query={{ store.storeName }}+{{store.storeAddress}}&loc={{store.lat}},{{store.lng}}" target="_blank" class="d-none d-sm-block">View in Google Maps</a>
+            <a href="https://www.google.com/maps/search/?api=1&query={{store.lat}},{{store.lng}}" target="_blank" class="d-sm-none">Google Maps</a>
+          </div>
+        </div>
+        <hr class="my-2 my-sm-3"/>
+        {% for item in store.halfloaves %}
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <div class="d-flex align-items-center pr-4 row-flex">
+              <div class=""><img src="/images/default-bread.png" alt="{{ item.title }}" class="breadImage p-1"></div>
+              <div class="text-left ml-2 os-sbi text-truncate">
+                <div class="font-medium text-truncate">{{ item.title }}</div>
+                <div class="font-small">
+                  {{ item.weight }}
+                  ·
+                  {{ item.price }}
+                </div>
+              </div>
+            </div>
+            <div class="cta-button font-small">
+              <a href="{{item.url}}" target="_blank">Buy from Dunzo</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

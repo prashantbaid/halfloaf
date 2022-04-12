@@ -7,10 +7,10 @@ const getData = (lat, lng) => {
   hideResultsHtml();
   $('.loading-container').show();
 
-  fetch(`https://6pa3a8gyl5.execute-api.ap-south-1.amazonaws.com/default/findhalfloaves-prod-halfloaves?lat=${lat}&lng=${lng}`, requestOptions)
+  fetch(`http://localhost:3000/dev/findhalfloaves?lat=${lat}&lng=${lng}`, requestOptions)
     .then(response => response.json())
     .then(result => drawMap(result))
-    .catch(error => showErrorHtml(error));
+    .catch(error => showNoResultsHtml(error));
 }
 
 const drawMap = (result) => {
@@ -43,8 +43,6 @@ const drawMap = (result) => {
     return [item.lng, item.lat];
   });
 
-  console.log('coordinates ', coordinates);
-
   const bounds = coordinates.reduce(function (bounds, coord) {
     return bounds.extend(coord);
   }, new maplibregl.LngLatBounds(coordinates[0], coordinates[0]));
@@ -57,39 +55,9 @@ const drawMap = (result) => {
   showResults(result);
 }
 
-const drawGoogleMap = (result) => {
-  const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 8,
-    center: [
-      12.550343, 55.665957
-    ],
-  });
-
-  const coordinates = JSON.parse(result).map(item => {
-    const { lat, lng } = item;
-    new google.maps.Marker({
-      position: { lat, lng },
-      map,
-      title: "Hello World!",
-    });
-
-    return { lat, lng };
-  });
-
-  const bounds = coordinates.reduce(function (bounds, coord) {
-    return bounds.extend(coord);
-  }, new google.maps.LatLngBounds(
-    new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng),
-    new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng)
-  ));
-
-  map.fitBounds(bounds, {
-    padding: 50
-  });
-}
-
 function initialize() {
   hideResultsHtml();
+  nunjucks.configure('/nunjunks', { autoescape: true });
   const input = document.getElementById('searchTextField');
   const options = {
     componentRestrictions: { country: 'in' }
@@ -100,17 +68,14 @@ function initialize() {
   google.maps.event.addListener(autocomplete, 'place_changed', function () {
     const place = autocomplete.getPlace();
     getData(place.geometry.location.lat(), place.geometry.location.lng());
-    console.log('place ', place.geometry.location.lat(), place.geometry.location.lng());
   });
 }
 
 const showResults = (results) => {
-  const template = $('#resultsTemplate').html();
-  nunjucks.configure({ autoescape: true });
-  //console.log('template ', results);
   totalLoaves = getTotalLoaves(results);
-  const html = nunjucks.renderString(template, { results, totalLoaves });
-  $('.results-container').html(html);
+  nunjucks.render('results.njk', { results, totalLoaves }, function (err, res) {
+    $('.results-container').html(res);
+  });
 }
 
 const getTotalLoaves = (results) => {
@@ -123,12 +88,10 @@ const getTotalLoaves = (results) => {
   return totalLoaves;
 }
 
-
 const hideResultsHtml = () => {
   $('.results-container').hide();
   $('#map').hide();
   $('.no-results-container').hide();
-  $('.error-container').hide();
 }
 
 const showResultsHtml = () => {
@@ -137,12 +100,8 @@ const showResultsHtml = () => {
 }
 
 const showNoResultsHtml = () => {
-  $('.no-results-container').show();
-}
-
-const showErrorHtml = (error) => {
   $('.loading-container').hide();
-  $('.error-container').show();
+  $('.no-results-container').show();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
