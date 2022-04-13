@@ -89,7 +89,6 @@ const getTotalLoaves = (results) => {
     totalLoaves = item.halfloaves.length + totalLoaves;
   });
 
-  console.log('totalLoaves ', totalLoaves);
   return totalLoaves;
 }
 
@@ -111,7 +110,3 @@ const showNoResultsHtml = () => {
 
 
 google.maps.event.addDomListener(window, 'load', initialize);
-
-
-
-

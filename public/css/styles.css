@@ -161,12 +161,15 @@ hr {
   width: 100%;
   padding: 10px;
   background-color: var(--basecolor);
-  font-size: 20px;
   text-transform: capitalize;
 }
 
 .search-input:focus-visible {
   outline: none;
+}
+
+p:last-child {
+  margin-bottom: 0px !important;
 }
 
 .result-item:last-child {
@@ -257,12 +260,12 @@ h3, h4, h5, h6 {
 }
 
 .pac-item-query {
-  font-size: 18px;
+  font-size: inherit;
 }
 
 .pac-item {
   padding: 10px;
-  font-size: 14px;
+  font-size: inherit;
   border-bottom: 3px solid #000;
 }
 
