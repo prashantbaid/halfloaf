@@ -15,7 +15,8 @@ export const handler = async function (event, context) {
   return {
     statusCode: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*' // Required for CORS support to work
+      'Access-Control-Allow-Origin': 'https://halfloafnear.me',
+      "Access-Control-Allow-Methods": "OPTIONS,GET"
     },
     body: JSON.stringify(breads)
   }
@@ -89,9 +90,9 @@ const validateWeights = (unitWeight, itemQuantityOrWeight) => {
     if (Number(weight) < 300) {
       return true;
     }
-
-    return false;
   }
+
+  return false;
 }
 
 const saniteiseDistance = (distanceText) => {
