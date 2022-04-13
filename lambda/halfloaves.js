@@ -1,7 +1,7 @@
 import got from 'got';
 import cheerio from 'cheerio';
 
-const ARTISINAL_BREADS_REGEX = /(kulcha|fruit|pav|bun|fuit|sweet|flattened|flat|garlic|toast|toasted|round|crumbs|cheese|pita|pizza|cream|creamy|roll|parmesan|footlong|sub|crumb|stick|focaccia)+/g
+const ARTISANAL_BREADS_REGEX = /(kulcha|fruit|pav|bun|fuit|sweet|flattened|flat|garlic|toast|toasted|round|crumbs|cheese|pita|pizza|cream|creamy|roll|parmesan|footlong|sub|crumb|stick|focaccia)+/g
 
 export const handler = async function (event, context) {
   const lng = event.queryStringParameters.lng;
@@ -41,7 +41,7 @@ const processResults = (data) => {
       const { items, checkoutData, eventMeta, widgetData } = widget;
       const { lat, lng, displayAddress, title, distanceText } = checkoutData;
       const dzid = eventMeta.dzid;
-      const storeDistance = saniteiseDistance(distanceText);
+      const storeDistance = sanitiseDistance(distanceText);
 
       const storeData = {
         storeName: title,
@@ -53,7 +53,7 @@ const processResults = (data) => {
       };
 
       items.map(item => {
-        if (item.customizationData && item.category === 'Breakfast & Dairy' && item.subCategory === 'Bread & Buns' && isNonArtisinalBread(item.title) && storeDistance < 20) {
+        if (item.customizationData && item.category === 'Breakfast & Dairy' && item.subCategory === 'Bread & Buns' && isNonArtisanalBread(item.title) && storeDistance < 20) {
           const variantTypes = item.customizationData.variantTypes;
 
           if (variantTypes) {
@@ -95,7 +95,7 @@ const validateWeights = (unitWeight, itemQuantityOrWeight) => {
   return false;
 }
 
-const saniteiseDistance = (distanceText) => {
+const sanitiseDistance = (distanceText) => {
   if (distanceText.includes(' km')) {
     return distanceText.substring(0, distanceText.length - 3);
   }
@@ -149,7 +149,7 @@ const getBreads = async (options, breadsArr) => {
   }
 }
 
-const isNonArtisinalBread = (title) => {
-  const regex = new RegExp(ARTISINAL_BREADS_REGEX);
+const isNonArtisanalBread = (title) => {
+  const regex = new RegExp(ARTISANAL_BREADS_REGEX);
   return !regex.test(title.toLowerCase());
 }
