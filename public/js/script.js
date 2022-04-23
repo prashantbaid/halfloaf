@@ -25,7 +25,7 @@ const drawMap = (result) => {
 
   const map = new maplibregl.Map({
     container: 'map',
-    style: 'https://api.maptiler.com/maps/f6a3cec6-db18-4ba4-85ae-ac4bdee7f1e9/style.json?key=PsBI3TqYiCczIww1qpnq',
+    style: '../mapStyles/map-style.json',
     center: [78.9629, 20.5937],
     zoom: 10
   });
