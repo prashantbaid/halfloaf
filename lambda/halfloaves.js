@@ -128,6 +128,7 @@ const getBreads = async (options, breadsArr) => {
     'headers': {
       'content-type': 'application/json;charset=UTF-8',
       'x-csrf-token': csrfToken,
+      'x-app-type': 'PWA_WEB',
       cookie
     },
     body: JSON.stringify(payload)
